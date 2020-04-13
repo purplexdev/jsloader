@@ -1,0 +1,13 @@
+name: JSLoader
+version: 1.0.2
+main: me.retrooper.jsloader.Main
+authors: [retrooper]
+description: Bukkit version of JSLOader
+
+commands:
+  jsl:
+    description: Alias of /javascriptloader
+  jsloader:
+    description: Alias of /javascriptloader
+  javascriptloader:
+    description: Information about the JSLoader
