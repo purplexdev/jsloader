@@ -10,6 +10,7 @@ import javax.script.ScriptException;
 import me.retrooper.jsloader.Main;
 import me.retrooper.jsloader.data.JSData;
 import me.retrooper.jsloader.exceptions.MissingRequiredFunctionException;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.HandlerList;
 
 import java.util.function.Function;
@@ -139,7 +140,9 @@ public class JSPlugin {
         importCode += "var PlayerHelper = JavaClass('me.retrooper.jsloader.PlayerHelper').static;";
         importCode += "var EntityHelper = JavaClass('me.retrooper.jsloader.EntityHelper').static;";
         importCode += "var WorldHelper = JavaClass('me.retrooper.jsloader.WorldHelper').static;";
+        importCode += "var TeleportCause = JavaClass('me.retrooper.jsloader.customenums.TeleportCause').static;";
         importCode += "var Material = JavaClass('org.bukkit.Material').static;";
+        importCode += "var EntityType = JavaClass('org.bukkit.entity.EntityType').static;";
         importCode += "var BukkitUtils = JavaClass('me.retrooper.jsloader.utils.BukkitUtils').static;";
         importCode += "var ArrayList = JavaClass('java.util.ArrayList');";
         importCode += "var GameMode = JavaClass('org.bukkit.GameMode').static;";
@@ -148,7 +151,8 @@ public class JSPlugin {
         importCode += "var Location = JavaClass('org.bukkit.Location');";
         importCode += "var UUID = JavaClass('java.util.UUID');";
         importCode += "var ItemStack = JavaClass('org.bukkit.inventory.ItemStack');";
-        importCode += "var TeleportCause = JavaClass('me.retrooper.jsloader.customenums.TeleportCause');";
+
+
         try {
             importedScript = ((Compilable) this.engine).compile(importCode);
         } catch (ScriptException e) {
@@ -200,11 +204,11 @@ public class JSPlugin {
         eventsCode += "events.onPreInteractAtEntity = function(worldName, entityId, entityIdB){player = PlayerHelper.fromId(entityId); entity = EntityHelper.fromId(worldName, entityIdB); return events.onInteractAtEntity(player, entity);};";
         eventsCode += "events.onPreEat = function(id, materialname) {player = PlayerHelper.fromId(id); material = Material.valueOf(materialname); return events.onEat(player, material);};";
         eventsCode += "events.onPreToggleSneak = function(id, isSneaking) {player = PlayerHelper.fromId(id); return events.onToggleSneak(player, isSneaking);};";
-        eventsCode += "events.onPreItemPickup = function(id, materialName) {player = PlayerHelper.fromId(id); material = Material.valueOf(materialName); return events.onItemPickup(player, material);};";
+        eventsCode += "events.onPreItemPickup = function(id, typeName) {player = PlayerHelper.fromId(id); type = EntityType.valueOf(typeName); return events.onItemPickup(player, type);};";
         eventsCode += "events.onPreTeleport = function(id, fwrld, twrld, fX, fY, fZ, tX, tY, tZ, causeName) {player = PlayerHelper.fromId(id); cause = TeleportCause.valueOf(causeName); from = LocationHelper.toLoc(fwrld, fX, fY, fZ); to = LocationHelper.toLoc(twrld, tX, tY, tZ); return events.onTeleport(player, from, to, cause);};";
         //COMPILE THEN EXECUTE
 
-        ((Compilable)this.engine).compile(eventsCode).eval();
+        ((Compilable) this.engine).compile(eventsCode).eval();
 
         //this.engine.eval("events.onPreJoin = function(id){player = PlayerHelper.fromId(id); return events.onJoin(player);};");
         //this.engine.eval("events.onPreMove = function(worldName, fromX, fromY, fromZ, toX, toY, toZ, id) {player=PlayerHelper.fromId(id); from = LocationHelper.toLoc(worldName, fromX, fromY, fromZ); to = LocationHelper.toLoc(worldName, toX, toY, toZ); return events.onMove(player, from, to);};");
